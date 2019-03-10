@@ -3,31 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <title>Chat</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <link rel="stylesheet" href="/main.css" type="text/css"/>
 </head>
 <body>
 
 <div style="text-align: center;">
-    <span id="message">Trwa łączenie..</span>
-
-    <form onsubmit="return catchFormSubmit();" action="#">
-         <label for="user-input">Wpisz wiadomość: </label>
-         <input type="text" id="user-input" />
-    </form>
+    <div class="mx-auto col-centered col-sm-3 col-sm-offset-4 frame">
+        <ul></ul>
+        <div>
+            <div class="msj-rta macro" style="margin:auto">
+                <div class="text text-r" style="background:whitesmoke !important">
+                    <form onsubmit="return catchFormSubmit();" action="#">
+                         <input id="user-input" class="mytext" placeholder="Type a message"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+
+
+
+<script src="/main.js"></script>
 <script>
     const webSocket = new WebSocket("ws://localhost:8080/chat");
-    const messageBox = document.getElementById("message");
+
 
     webSocket.onopen = function () {
         console.log("Otwarto połączenie z serwerem");
-        messageBox.innerHTML = "<color='red'>Połączono hihi</color>";
     };
 
     webSocket.onmessage = function (event) {
-        console.log("Mamy wiadomość");
-        console.log("Ta wiadomość to: " + event.data);
-        messageBox.innerHTML = "Wiadomość: " + event.data;
+        insertChat("you", event.data, 200);
     };
 
     function catchFormSubmit() {
@@ -36,6 +48,8 @@
         if(userInput.value !== "")
         webSocket.send(userInput.value);
 
+
+        insertChat("me", userInput.value, 100);
         userInput.value = "";
         return false;
     }
