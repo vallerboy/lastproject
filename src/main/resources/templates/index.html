@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+</head>
+<body>
+
+<div style="text-align: center;">
+    <span id="message">Trwa łączenie..</span>
+
+    <form onsubmit="return catchFormSubmit();" action="#">
+         <label for="user-input">Wpisz wiadomość: </label>
+         <input type="text" id="user-input" />
+    </form>
+</div>
+
+<script>
+    const webSocket = new WebSocket("ws://localhost:8080/chat");
+    const messageBox = document.getElementById("message");
+
+    webSocket.onopen = function () {
+        console.log("Otwarto połączenie z serwerem");
+        messageBox.innerHTML = "<color='red'>Połączono hihi</color>";
+    };
+
+    webSocket.onmessage = function (event) {
+        console.log("Mamy wiadomość");
+        console.log("Ta wiadomość to: " + event.data);
+        messageBox.innerHTML = "Wiadomość: " + event.data;
+    };
+
+    function catchFormSubmit() {
+        let userInput = document.getElementById("user-input");
+
+        if(userInput.value !== "")
+        webSocket.send(userInput.value);
+
+        userInput.value = "";
+        return false;
+    }
+</script>
+
+
+</body>
+</html>
